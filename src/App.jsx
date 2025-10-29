@@ -1,9 +1,8 @@
 import './index.css'
   import { useState, useEffect } from 'react';
 
-  import { Auth } from '@supabase/auth-ui-react';
-  import { ThemeSupa } from '@supabase/auth-ui-shared';
   import supabase from './supabaseClient';
+  import CustomAuth from './CustomAuth';
 
   export default function App() {
     const [session, setSession] = useState(null);
@@ -23,9 +22,15 @@ import './index.css'
     }, [])
 
     if (!session) {
-      return (<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />)
-    }
-    else {
-      return (<div className='text-green-500'>Logged in!</div>)
+      return (<CustomAuth />)
+    } else {
+      return (
+        <div>
+          <div className='text-green-500'>Logged in!</div>
+          <div>
+            <button className="btn btn-primary" onClick={() => supabase.auth.signOut()}>Sign Out</button>
+          </div>
+        </div>
+      )
     }
   }
