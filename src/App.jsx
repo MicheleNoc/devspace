@@ -4,6 +4,7 @@ import './index.css'
   import supabase from './supabaseClient';
   import CustomAuth from './pages/CustomAuth';
   import Welcome from './pages/Welcome';
+import Dashboard from './pages/Dashboard';
 
   export default function App() {
     const [session, setSession] = useState(null)
@@ -81,18 +82,6 @@ import './index.css'
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl mb-4">Welcome to DevSpace, {profileUsername}!</h1>
-      <p className="mb-4">You are now logged in.</p>
-      <button
-        className="px-4 py-2 bg-red-500 text-white rounded"
-        onClick={async () => {
-          await supabase.auth.signOut()
-          setSession(null)
-        }}
-      >
-        Sign Out
-      </button>
-    </div>
+    <Dashboard profileUsername={profileUsername} setSession={setSession} />
   )
   }
