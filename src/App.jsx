@@ -2,7 +2,8 @@ import './index.css'
   import { useState, useEffect } from 'react';
 
   import supabase from './supabaseClient';
-  import CustomAuth from './CustomAuth';
+  import CustomAuth from './pages/CustomAuth';
+import Dashboard from './pages/Dashboard';
 
   export default function App() {
     const [session, setSession] = useState(null);
@@ -25,12 +26,7 @@ import './index.css'
       return (<CustomAuth />)
     } else {
       return (
-        <div>
-          <div className='text-green-500'>Logged in!</div>
-          <div>
-            <button className="btn btn-primary" onClick={() => supabase.auth.signOut()}>Sign Out</button>
-          </div>
-        </div>
+        <Dashboard/>
       )
     }
   }

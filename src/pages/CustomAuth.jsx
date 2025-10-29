@@ -1,48 +1,56 @@
-import { useState } from 'react'
-import supabase from './supabaseClient'
+import { useState } from "react";
+import supabase from "../supabaseClient";
 
 export default function CustomAuth() {
-  const [mode, setMode] = useState('sign-in') // 'sign-in' | 'sign-up'
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [message, setMessage] = useState(null)
+  const [mode, setMode] = useState("sign-in"); // 'sign-in' | 'sign-up'
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
 
   async function handleSubmit(e) {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
-    setMessage(null)
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setMessage(null);
 
     try {
-      if (mode === 'sign-in') {
-        const { error } = await supabase.auth.signInWithPassword({ email, password })
-        if (error) throw error
-        setMessage('Accesso effettuato — verrai reindirizzato se necessario')
+      if (mode === "sign-in") {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
+        setMessage("Accesso effettuato — verrai reindirizzato se necessario");
       } else {
-        const { error } = await supabase.auth.signUp({ email, password })
-        if (error) throw error
+        const { error } = await supabase.auth.signUp({ email, password });
+        if (error) throw error;
         // For sign up we usually ask user to confirm email
-        setMessage('Registrazione inviata. Controlla la tua casella di posta per confermare.')
+        setMessage(
+          "Registrazione inviata. Controlla la tua casella di posta per confermare."
+        );
       }
     } catch (err) {
-      setError(err.message ?? String(err))
+      setError(err.message ?? String(err));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   return (
-    <div className="flex items-center justify-center bg-gray-50 px-4 min-h-screen min-w-screen">
+    <div className="flex items-center justify-center bg-blue-50 px-4 min-h-screen min-w-screen">
       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow">
-        <h2 className="text-2xl font-semibold mb-6 text-center">{mode === 'sign-in' ? 'Sign in' : 'Create account'}</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-center">
+          {mode === 'sign-in' ? 'Sign in' : 'Create account'}
+        </h2>
 
         {error && <div className="mb-4 text-sm text-red-600">{error}</div>}
         {message && <div className="mb-4 text-sm text-green-600">{message}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="text-center text-gray-700 text-lg font-semibold"> Welcome to DevSpace 🚀</div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700">Email</label>
             <input
@@ -70,8 +78,8 @@ export default function CustomAuth() {
           <div>
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-60"
               disabled={loading}
+              className={`w-full py-2 px-4 text-white rounded ${loading ? 'bg-green-100' : 'bg-green-600 hover:bg-blue-700'} disabled:opacity-60`}
             >
               {loading ? 'Processing...' : mode === 'sign-in' ? 'Sign in' : 'Create account'}
             </button>
