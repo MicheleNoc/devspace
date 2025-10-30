@@ -1,3 +1,5 @@
+import Avatar from './Avatar.jsx'
+
 export default function Navbar({ profileUsername }) {
   return (
     <nav className="bg-white border-b border-gray-200 px-6 py-3">
@@ -20,14 +22,8 @@ export default function Navbar({ profileUsername }) {
 
         {/* Right Section */}
         <div className="flex items-center gap-4">
-         
           {/* Profile */}
-          <button className="w-9 h-9 flex items-center justify-center bg-gray-700 hover:bg-gray-800">
-            <span className="text-white text-sm font-medium">
-              {/* TODO: aggiungere immagine profilo */}
-              {profileUsername ? profileUsername.charAt(0).toUpperCase() : 'U'}
-            </span>
-          </button>
+          <Avatar user={profileUsername} size={36} />
         </div>
       </div>
     </nav>
