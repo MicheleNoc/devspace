@@ -11,18 +11,13 @@ export default function Sidebar({ activeSection, setActiveSection, onLogout }) {
     { id: 'productivity', icon: '⚙️', label: 'Productivity' },
   ]
 
-  const favoriteItems = [
-    { id: 'kanban', label: 'Kanban board', count: 24 },
-    { id: 'design', label: 'Design', count: 24 },
-    { id: 'development', label: 'Development', count: 24 },
-  ]
 
   return (
     <div className="w-64 bg-gray-50 border-r border-gray-200 h-screen flex flex-col">
       {/* Logo */}
       <div className="p-4 border-b border-gray-200 flex items-center gap-2">
-        <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-          <span className="text-white text-lg">📋</span>
+        <div className="bg-blue-500 rounded-lg flex items-center justify-center p-2">
+          <span className="text-white text-lg">DevSpace</span>
         </div>
         <span className="font-semibold text-lg">planit</span>
       </div>
@@ -59,25 +54,7 @@ export default function Sidebar({ activeSection, setActiveSection, onLogout }) {
             </span>
           </button>
           
-          {isFavoritesOpen && (
-            <div className="mt-1 space-y-1">
-              {favoriteItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveSection(item.id)}
-                  className={`w-full flex items-center justify-between px-3 py-2 pl-9 rounded-lg text-sm transition-colors ${
-                    activeSection === item.id
-                      ? 'bg-gray-200 text-gray-900'
-                      : 'text-gray-600 hover:bg-gray-200'
-                  }`}
-                >
-                  <span>{item.label}</span>
-                  <span className="text-xs text-gray-400">{item.count}</span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+           </div>
 
         {/* Workspace Section */}
         <div className="mt-6">
