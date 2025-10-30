@@ -20,29 +20,7 @@ export default function Navbar({ profileUsername }) {
 
         {/* Right Section */}
         <div className="flex items-center gap-4">
-          {/* Search */}
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search"
-              className="w-64 pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-              🔍
-            </span>
-          </div>
-
-          {/* Add Button */}
-          <button className="w-9 h-9 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-gray-50">
-            <span className="text-xl text-gray-600">+</span>
-          </button>
-
-          {/* Notifications */}
-          <button className="w-9 h-9 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-gray-50 relative">
-            <span className="text-xl">🔔</span>
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-          </button>
-
+         
           {/* Profile */}
           <button className="w-9 h-9 flex items-center justify-center bg-gray-700 hover:bg-gray-800">
             <span className="text-white text-sm font-medium">
