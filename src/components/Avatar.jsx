@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 import  supabase  from '../supabaseClient.jsx'
+import { Avatar as ShadcnAvatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 
 export default function Avatar({ profileUsername, size = 36 }) {
   const [avatarUrl, setAvatarUrl] = useState(null)
   const [uploading, setUploading] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   // Use a local currentUser so we can fallback to supabase.auth.getUser()
-  const [currentUser, setCurrentUser] = useState(profileUsername || null)
+  const [currentUser, setCurrentUser] = useState(null)
   const fileInputRef = useRef(null)
   const menuRef = useRef(null)
 
@@ -14,10 +15,6 @@ export default function Avatar({ profileUsername, size = 36 }) {
   // Keep currentUser in sync with prop `profileUsername` and fallback to supabase.auth.getUser()
   useEffect(() => {
     let mounted = true
-    if (profileUsername) {
-      setCurrentUser(profileUsername)
-      return
-    }
 
     async function fetchUser() {
       try {
@@ -26,7 +23,10 @@ export default function Avatar({ profileUsername, size = 36 }) {
           console.warn('Avatar: supabase.auth.getUser error', error)
           return
         }
-        if (mounted && data?.user) setCurrentUser(data.user)
+        if (mounted && data?.user) {
+          setCurrentUser(data.user)
+          console.log('Avatar: user fetched', { id: data.user.id, email: data.user.email })
+        }
       } catch (err) {
         console.error('Avatar: error fetching user', err)
       }
@@ -36,7 +36,7 @@ export default function Avatar({ profileUsername, size = 36 }) {
     return () => {
       mounted = false
     }
-  }, [profileUsername])
+  }, [])
 
   // Load avatar when we have a currentUser
   useEffect(() => {
@@ -159,7 +159,8 @@ export default function Avatar({ profileUsername, size = 36 }) {
       }
 
       // Ottieni public URL e aggiorna UI
-      const { publicURL } = supabase.storage.from('avatars').getPublicUrl(filePath)
+      const publicRes = supabase.storage.from('avatars').getPublicUrl(filePath)
+      const publicURL = publicRes?.data?.publicUrl ?? publicRes?.publicURL
       console.log('Avatar: publicURL after upload', publicURL)
       setAvatarUrl(publicURL)
       // reset input so same file can be re-selected
@@ -193,19 +194,7 @@ export default function Avatar({ profileUsername, size = 36 }) {
 
   return (
     <div className="relative flex items-center gap-2">
-      <div style={{ width: size, height: size }} className="block rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-        {uploading ? (
-          <div className="flex items-center justify-center w-full h-full text-gray-600">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
-          </div>
-        ) : avatarUrl ? (
-          <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
-        ) : (
-          <div className="flex items-center justify-center w-full h-full text-gray-600">
-            {profileUsername || 'U'}
-          </div>
-        )}
-      </div>
+      
 
       {/* Dropdown trigger */}
       <div className="relative">
@@ -215,17 +204,35 @@ export default function Avatar({ profileUsername, size = 36 }) {
               ev.stopPropagation()
               setMenuOpen((v) => !v)
             }}
-            className="w-8 h-8 flex items-center text-red-600 justify-center border border-gray-200 rounded-md hover:bg-gray-50"
+            className="cursor-pointer border-0 bg-transparent p-0 m-0 rounded-full hover:opacity-80 transition-opacity"
             aria-haspopup="true"
             aria-expanded={menuOpen}
             title="Opzioni avatar"
           >
-            ⋯
+            <ShadcnAvatar 
+              style={{ width: size, height: size }} 
+            >
+              <AvatarImage 
+                src={avatarUrl} 
+                alt="avatar"
+                onLoad={() => {
+                  console.log('Avatar: image loaded successfully', avatarUrl)
+                }}
+              />
+              <AvatarFallback className="text-gray-600 text-sm font-medium">
+                {uploading ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
+                ) : (
+                  currentUser?.email ? currentUser.email.charAt(0).toUpperCase() : 
+                  profileUsername ? profileUsername.charAt(0).toUpperCase() : 'U'
+                )}
+              </AvatarFallback>
+            </ShadcnAvatar>
           </button>
 
           {menuOpen && (
             // Ensure dropdown text is dark on the white background by setting an explicit text color
-            <div className="absolute right-0 mt-2 w-44 bg-white border rounded shadow-sm z-50 text-gray-700">
+            <div className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg z-50 text-gray-700 overflow-hidden">
               <button
                 className={`w-full text-left px-3 py-2 text-sm ${uploading || !currentUser ? 'text-gray-400' : 'text-blue-600 hover:bg-gray-100'}`}
                 onClick={() => {

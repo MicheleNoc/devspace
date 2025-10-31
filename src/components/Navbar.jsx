@@ -12,7 +12,7 @@ export default function Navbar({ profileUsername }) {
         {/* Right Section */}
         <div className="flex items-center gap-4">
           {/* Profile */}
-          <Avatar user={profileUsername} size={36} />
+          <Avatar profileUsername={profileUsername} size={36} />
         </div>
       </div>
     </nav>
